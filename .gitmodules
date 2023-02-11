@@ -1,0 +1,9 @@
+[submodule "ShaderStudio/vendor/NImGui2"]
+	path = ShaderStudio/vendor/NImGui2
+	url = https://github.com/tobid7vx/NImGui
+[submodule "vendor/glslang2"]
+	path = vendor/glslang2
+	url = https://github.com/KhronosGroup/glslang.git
+[submodule "vendor/spirv-cross2"]
+	path = vendor/spirv-cross2
+	url = https://github.com/KhronosGroup/SPIRV-Cross.git
