@@ -88,6 +88,8 @@ TextEditor otext;
 const char *shader_lang_[] = {"GLSL", "GLSL ES", "SPIRV", "HLSL", "MSL"};
 std::string current_item_shader_lang = shader_lang_[0];
 std::string glslver = "100";
+const char *shader_stage_[] = {"Vertex", "Fragment"};
+std::string current_shader_stage_ = shader_stage_[0];
 
 std::map<std::string, sc::ShaderFormat> fmt_lib = {
     {"GLSL", sc::GLSL}, {"GLSL ES", sc::GLSL}, {"SPIRV", sc::SPIRV},
@@ -128,6 +130,11 @@ int main() {
         ValidateVersion(std::atoi(glslver.c_str()),
                         (current_item_shader_lang == "GLSL ES") ? true
                                                                 : false)) {
+      sc::ShaderStage stg__ = sc::ShaderStage::Vertex;
+      if(current_shader_stage_ == shader_stage_[0])
+        stg__ = sc::ShaderStage::Vertex;
+      if(current_shader_stage_ == shader_stage_[1])
+        stg__ = sc::ShaderStage::Vertex;
       std::string res = sc::ConvertGLSL(
           fmt_lib.at(current_item_shader_lang), sc::Vertex, imtext.GetText(),
           std::atoi(glslver.c_str()),
@@ -142,6 +149,25 @@ int main() {
     ImGui::SetWindowSize(ImVec2(app.GetWindowSize().x, app.GetWindowSize().y));
     HandleMenuBar();
     ImGui::Text("Editor: GLSL");
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(150);
+    if (ImGui::BeginCombo("##Stage", current_shader_stage_.c_str(),
+                          ImGuiComboFlags_HeightSmall)) {
+      for (int n = 0; n < IM_ARRAYSIZE(shader_stage_); n++) {
+        bool is_selected =
+            (current_shader_stage_ ==
+             shader_stage_[n]); // You can store your selection however you want,
+                               // outside or inside your objects
+        if (ImGui::Selectable(shader_stage_[n], is_selected))
+          current_shader_stage_ = shader_stage_[n];
+        if (is_selected)
+          ImGui::SetItemDefaultFocus(); // You may set the initial focus when
+                                        // opening the combo (scrolling + for
+                                        // keyboard navigation support)
+      }
+      ImGui::EndCombo(); // only call ImGui::EndCombo() if BeginCombo() returns
+                         // true!
+    }
     ImGui::SameLine(0, (ImGui::GetWindowSize().x / 2 -
                         ImGui::CalcTextSize("Editor: GLSL").x));
     ImGui::Text("Output: ");
